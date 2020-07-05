@@ -1,8 +1,8 @@
 import struct
 import sys
-
 from .operations import Operations
 from .opcode import Opcode
+from .exceptions import InvalidNumberError, EmptyStackError
 
 
 class VirtualMachine:
@@ -36,12 +36,14 @@ class VirtualMachine:
                 op_val = self._bin[self._curr_idx]
                 opcode = Opcode(op_val)
                 operation = getattr(self._ops, opcode.name.lower())
+                self._curr_idx = operation(self._curr_idx)
             except ValueError:
-                print(
-                    f"Error in binary at index{self._curr_idx}: {op_val} is not listed as a valid opcode")
+                sys.exit(
+                    f"Error in binary at index {self._curr_idx}: {op_val} is not listed as a valid opcode")
             except AttributeError:
-                print(
-                    f"Error in binary at index {self._curr_idx}: Operation {opcode.name} not implemented.")
-                sys.exit(1)
-
-            self._curr_idx = operation(self._curr_idx)
+                sys.exit(
+                    f"Error in binary at index {self._curr_idx}: Operation {opcode.name} not implemented")
+            except InvalidNumberError as e:
+                sys.exit(f"Error in binary at index {self._curr_idx}: {e}")
+            except EmptyStackError as e:
+                sys.exit(f"Error in binary at index {self._curr_idx}: {e}")
