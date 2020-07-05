@@ -165,36 +165,36 @@ class Operations:
         self._validate_write(remainder, idx + 1)
         return idx + 4
 
-    def _and(self, idx: int) -> int:
+    def and_(self, idx: int) -> int:
         """
         `and: 12 a b c`
         Stores into `a` the bitwise and of `b` and `c`
         """
-        assert self._bin[idx] == Opcode._AND.value
+        assert self._bin[idx] == Opcode.AND_.value
         val_1 = self._validate_read(self._bin[idx + 2])
         val_2 = self._validate_read(self._bin[idx + 3])
         bw_and = val_1 & val_2
         self._validate_write(bw_and, idx + 1)
         return idx + 4
 
-    def _or(self, idx: int) -> int:
+    def or_(self, idx: int) -> int:
         """
         `or: 13 a b c`
         Stores into `a` the bitwise or of `b` and `c`
         """
-        assert self._bin[idx] == Opcode._OR.value
+        assert self._bin[idx] == Opcode.OR_.value
         val_1 = self._validate_read(self._bin[idx + 2])
         val_2 = self._validate_read(self._bin[idx + 3])
         bw_or = val_1 | val_2
         self._validate_write(bw_or, idx + 1)
         return idx + 4
 
-    def _not(self, idx: int) -> int:
+    def not_(self, idx: int) -> int:
         """
         `not: 14 a b`
         Stores 15-bit bitwise inverse of `b` in `a`
         """
-        assert self._bin[idx] == Opcode._NOT.value
+        assert self._bin[idx] == Opcode.NOT_.value
         val = self._validate_read(self._bin[idx + 2])
         bw_not = (~val) % 32768
         self._validate_write(bw_not, idx + 1)
@@ -252,7 +252,7 @@ class Operations:
         print(chr(ordinal), end='')
         return idx + 2
 
-    def _in(self, idx: int) -> int:
+    def in_(self, idx: int) -> int:
         """
         `in: 20 a`
         Reads a character from the terminal and write its ascii code to `a`.
@@ -262,7 +262,7 @@ class Operations:
         there is a guarantee that once input starts, it will continue until a
         newline is encountered, this should pose no issue to the virtual machine.
         """
-        assert self._bin[idx] == Opcode._IN.value
+        assert self._bin[idx] == Opcode.IN_.value
         if not self._input_cache:
             tmp = input()
             self._input_cache = list(tmp + '\n')[::-1]

@@ -123,9 +123,9 @@ def test_arithmetic_ops(default_ops_object, op, curr_idx, input_bin, next_idx, r
 @pytest.mark.parametrize(
     "op,curr_idx,input_bin,next_idx,res_bin",
     [
-        ('_and', 0, [12, 1, 2, 3], 4, [12, 2, 2, 3]),
-        ('_or', 0, [13, 1, 3, 4], 4, [13, 7, 3, 4]),
-        ('_not', 0, [14, 1, 100], 3, [14, 32667, 100])
+        ('and_', 0, [12, 1, 2, 3], 4, [12, 2, 2, 3]),
+        ('or_', 0, [13, 1, 3, 4], 4, [13, 7, 3, 4]),
+        ('not_', 0, [14, 1, 100], 3, [14, 32667, 100])
     ]
 )
 def test_bitwise_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
@@ -153,7 +153,7 @@ def test_mem_manip_ops(default_ops_object, op, curr_idx, input_bin, next_idx, re
     "op,curr_idx,input_bin,next_idx,res_bin,side_effect",
     [
         ('out', 0, [19, 97], 2, [19, 97], 'mocked_print'),
-        ('_in', 0, [20, 10], 2, [20, 97], 'mocked_input')
+        ('in_', 0, [20, 10], 2, [20, 97], 'mocked_input')
     ]
 )
 def test_io_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin, side_effect):

@@ -18,13 +18,13 @@ class Opcode(Enum):
     ADD = 9
     MULT = 10
     MOD = 11
-    _AND = 12
-    _OR = 13
-    _NOT = 14
+    AND_ = 12
+    OR_ = 13
+    NOT_ = 14
     RMEM = 15
     WMEM = 16
     CALL = 17
     RET = 18
     OUT = 19
-    _IN = 20
+    IN_ = 20
     NOOP = 21
