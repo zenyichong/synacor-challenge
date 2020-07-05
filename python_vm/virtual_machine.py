@@ -10,7 +10,7 @@ class VirtualMachine:
         self._bin = self._decode_binary_from_file(bin_path)
         self._registers = [0] * 8
         self._stack = []
-        self._ops = Operations(self._bin)
+        self._ops = Operations(self._bin, self._registers, self._stack)
         self._curr_idx = 0
 
     @staticmethod
@@ -32,9 +32,13 @@ class VirtualMachine:
 
     def execute(self):
         while True:
-            opcode = Opcode(self._bin[self._curr_idx])
             try:
+                op_val = self._bin[self._curr_idx]
+                opcode = Opcode(op_val)
                 operation = getattr(self._ops, opcode.name.lower())
+            except ValueError:
+                print(
+                    f"Error in binary at index{self._curr_idx}: {op_val} is not listed as a valid opcode")
             except AttributeError:
                 print(
                     f"Error in binary at index {self._curr_idx}: Operation {opcode.name} not implemented.")

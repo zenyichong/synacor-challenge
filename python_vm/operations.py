@@ -4,8 +4,10 @@ import sys
 class Operations:
     """Class containing operations defined for each opcode"""
 
-    def __init__(self, bin: list):
-        self._bin = bin
+    def __init__(self, _bin: list = [], registers: list = [], stack: list = []):
+        self._bin = _bin
+        self._registers = registers
+        self._stack = stack
 
     def halt(self, idx: int):
         """
