@@ -260,11 +260,14 @@ class Operations:
         To streamline this operation, a whole line is captured as input, which
         is then split into ascii chars and each of them fed into memory. Since
         there is a guarantee that once input starts, it will continue until a
-        newline is encountered, this should pose no issue to the virtual machine.
+        newline is encountered, this approach should pose no issue.
         """
         assert self._bin[idx] == Opcode.IN_.value
         if not self._input_cache:
             tmp = input()
+            # append a newline char since the one from `input()` is consumed by
+            # the program, then convert to a list and reversing it so each char
+            # can be popped sequentially and fed into memory
             self._input_cache = list(tmp + '\n')[::-1]
         char = self._input_cache.pop()
         self._validate_write(ord(char), idx + 1)

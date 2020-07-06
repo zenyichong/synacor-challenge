@@ -47,3 +47,6 @@ class VirtualMachine:
                 sys.exit(f"Error in binary at index {self._curr_idx}: {e}")
             except EmptyStackError as e:
                 sys.exit(f"Error in binary at index {self._curr_idx}: {e}")
+            except KeyboardInterrupt:
+                print(f"\n\nExiting program...")
+                sys.exit(0)
