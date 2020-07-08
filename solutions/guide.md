@@ -48,6 +48,14 @@ take tablet
 use tablet
 ```
 
-## 5th Code to 8th Code
+## 5th and 6th Code
+Continuing on from the previous code, the next 2 codes are also obtainable by
+simply playing the game, i.e. traversing the dungeon by making the correct
+choices, with a touch of puzzle solving.
+
+For posterity, the commands/inputs required to complete this stage are included
+for reference and can be found [here](./dungeon.txt).
+
+## 7th to 8th Code
 
 TODO

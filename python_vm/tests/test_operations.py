@@ -1,12 +1,6 @@
 import pytest
 from ..operations import Operations
-
-
-@pytest.fixture
-def default_ops_object():
-    registers = [0] * 8
-    ops = Operations(registers=registers)
-    return ops
+from ..virtual_machine import VirtualMachine
 
 
 @pytest.fixture(autouse=True)
@@ -17,11 +11,11 @@ def setup_mocks(mocker):
     mocked_input = mocker.patch('builtins.input', return_value='a')
 
 
-def get_operation(ops_object, op_name, input_bin, input_stack=[]):
-    ops_object._stack = input_stack
-    ops_object._bin = input_bin
-    operation = getattr(ops_object, op_name)
-    return operation
+def setup_vm_and_ops_module(binary, curr_idx, stack=[]):
+    vm = VirtualMachine(binary, curr_idx, stack)
+    ops = Operations(vm._read_from_mem, vm._write_to_mem,
+                     vm._push_stack, vm._pop_stack, vm._save_state)
+    return ops
 
 
 @pytest.mark.parametrize(
@@ -31,8 +25,9 @@ def get_operation(ops_object, op_name, input_bin, input_stack=[]):
         ('noop', 0, [21, 1], 1, None)
     ]
 )
-def test_no_args_ops(default_ops_object, op, curr_idx, input_bin, side_effect, next_idx):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_no_args_ops(op, curr_idx, input_bin, side_effect, next_idx):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     if side_effect:
         (eval(side_effect)).assert_called_once()
@@ -45,8 +40,9 @@ def test_no_args_ops(default_ops_object, op, curr_idx, input_bin, side_effect, n
         ('set', 0, [1, 2, 3], 3, [1, 3, 3])
     ]
 )
-def test_set_op(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_set_op(op, curr_idx, input_bin, next_idx, res_bin):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -62,8 +58,9 @@ def test_set_op(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
     ]
 
 )
-def test_stack_ops(default_ops_object, op, curr_idx, input_bin, input_stack, next_idx, res_bin, res_stack):
-    operation = get_operation(default_ops_object, op, input_bin, input_stack)
+def test_stack_ops(op, curr_idx, input_bin, input_stack, next_idx, res_bin, res_stack):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx, input_stack)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -80,8 +77,9 @@ def test_stack_ops(default_ops_object, op, curr_idx, input_bin, input_stack, nex
         ('gt', 0, [5, 2, 2, 4], 4, [5, 0, 2, 4]),
     ]
 )
-def test_comparison_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_comparison_ops(op, curr_idx, input_bin, next_idx, res_bin):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -97,8 +95,9 @@ def test_comparison_ops(default_ops_object, op, curr_idx, input_bin, next_idx, r
         ('jf', 0, [8, 1, 10], 3)
     ]
 )
-def test_jump_ops(default_ops_object, op, curr_idx, input_bin, next_idx):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_jump_ops(op, curr_idx, input_bin, next_idx):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
 
@@ -113,8 +112,9 @@ def test_jump_ops(default_ops_object, op, curr_idx, input_bin, next_idx):
         ('mod', 0, [11, 1, 15, 8], 4, [11, 7, 15, 8])
     ]
 )
-def test_arithmetic_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_arithmetic_ops(op, curr_idx, input_bin, next_idx, res_bin):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -128,8 +128,9 @@ def test_arithmetic_ops(default_ops_object, op, curr_idx, input_bin, next_idx, r
         ('not_', 0, [14, 1, 100], 3, [14, 32667, 100])
     ]
 )
-def test_bitwise_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_bitwise_ops(op, curr_idx, input_bin, next_idx, res_bin):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -142,8 +143,9 @@ def test_bitwise_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_
         ('wmem', 0, [16, 4, 10, 7, 1], 3, [16, 4, 10, 7, 10])
     ]
 )
-def test_mem_manip_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_mem_manip_ops(op, curr_idx, input_bin, next_idx, res_bin):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     assert result == next_idx
     assert input_bin == res_bin
@@ -156,8 +158,9 @@ def test_mem_manip_ops(default_ops_object, op, curr_idx, input_bin, next_idx, re
         ('in_', 0, [20, 10], 2, [20, 97], 'mocked_input')
     ]
 )
-def test_io_ops(default_ops_object, op, curr_idx, input_bin, next_idx, res_bin, side_effect):
-    operation = get_operation(default_ops_object, op, input_bin)
+def test_io_ops(op, curr_idx, input_bin, next_idx, res_bin, side_effect):
+    ops_module = setup_vm_and_ops_module(input_bin, curr_idx)
+    operation = getattr(ops_module, op)
     result = operation(curr_idx)
     (eval(side_effect)).assert_called_once()
     assert result == next_idx
