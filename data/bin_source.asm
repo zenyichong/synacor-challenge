@@ -2513,11 +2513,11 @@
 5480:  NOOP
 5481:  NOOP
 5482:  NOOP
-5483:  SET  r0    4    
-5486:  SET  r1    1    
-5489:  CALL 6027 
-5491:  EQ   r1    r0    6    
-5495:  JF   r1    5579 
+5483:  SET  r0    4                 # r0 = 4
+5486:  SET  r1    1                 # r1 = 1
+5489:  CALL 6027                    # call function beginning at 6027
+5491:  EQ   r1    r0    6           # if r0 == 6, set r1 = 1, else r1 = 0
+5495:  JF   r1    5579              # if r1 == 0 jump to 5579
 5498:  PUSH r0   
 5500:  PUSH r1   
 5502:  PUSH r2   
@@ -2729,21 +2729,21 @@
 6022:  POP  r2   
 6024:  POP  r1   
 6026:  RET 
-6027:  JT   r0    6035 
-6030:  ADD  r0    r1    1    
-6034:  RET 
-6035:  JT   r1    6048 
-6038:  ADD  r0    r0    32767
-6042:  SET  r1    r7   
-6045:  CALL 6027 
-6047:  RET 
-6048:  PUSH r0   
-6050:  ADD  r1    r1    32767
-6054:  CALL 6027 
-6056:  SET  r1    r0   
-6059:  POP  r0   
-6061:  ADD  r0    r0    32767
-6065:  CALL 6027 
+6027:  JT   r0    6035              # if r0 != 0 jump to 6035, else 
+6030:  ADD  r0    r1    1           # r0 = r1 + 1
+6034:  RET                          
+6035:  JT   r1    6048              # if r1 != 0 jump to 6048, else
+6038:  ADD  r0    r0    32767       # r0 = (r0 - 1) mod 32768
+6042:  SET  r1    r7                # r1 = r7
+6045:  CALL 6027                    
+6047:  RET                          
+6048:  PUSH r0                      # append r0 to stack 
+6050:  ADD  r1    r1    32767       # r1 = (r1 - 1) mod 32768
+6054:  CALL 6027                    
+6056:  SET  r1    r0                # r1 = r0
+6059:  POP  r0                      # pop from stack and assign to r0
+6061:  ADD  r0    r0    32767       # r0 = (r0 - 1) mod 32768
+6065:  CALL 6027             
 6067:  RET 
 6068:  DATA: 6095
 6069:  DATA: 17625

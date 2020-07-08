@@ -237,11 +237,12 @@ class Operations:
             tmp = input('> ')
             if 'rewire teleporter' in tmp:
                 self._rewire_teleporter()
+                print('Teleporter settings altered!\n')
                 return idx
             elif 'save' in tmp:
                 if len(tmp.split()) == 1:
                     print(
-                        "Please provide a file name. State will be saved into both <filename>.bin and <filename>.json inside data/")
+                        "Please provide a file name. State will be saved into both <filename>.bin and <filename>.json inside data/ \n")
                 else:
                     filename = tmp.strip().split()[-1]
                     self._save(filename)
