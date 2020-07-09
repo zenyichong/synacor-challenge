@@ -91,6 +91,7 @@ class VirtualMachine:
         with open('./data/{}.bin'.format(filename), 'wb') as f:
             data = struct.pack('<{}H'.format(len(self._bin)), *self._bin)
             f.write(data)
+        print("Saved memory data to data/{}.bin".format(filename))
         with open('./data/{}.json'.format(filename), 'w') as f:
             tmp = {
                 'registers': self._registers,
@@ -98,6 +99,7 @@ class VirtualMachine:
                 'curr_idx': self._curr_idx
             }
             json.dump(tmp, f, indent=4)
+        print("Saved registers and stack data to data/{}.json\n".format(filename))
 
     def get_byte(self, idx: str):
         return self._bin[idx]

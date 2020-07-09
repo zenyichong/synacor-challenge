@@ -11,8 +11,8 @@ found which can be submitted to the challenge
 
 ## Solutions
 
-I have included a short guide describing the steps required to obtain
-each code, which can be found in the **solutions** directory, or by clicking
+I have included a guide describing the steps required to obtain each code,
+which can be found in the **solutions** directory, or by clicking
 this [link](./solutions/guide.md)
 
 ## Trying it out

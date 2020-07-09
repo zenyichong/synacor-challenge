@@ -51,28 +51,28 @@ use tablet
 ## 5th and 6th Code
 Continuing on from the previous code, the next 2 codes are also obtainable by
 simply playing the game, i.e. traversing the dungeon by making the correct
-choices, with a touch of puzzle solving.
+choices. There is also a puzzle mixed in for this section, and I put together
+a [simple script](./scripts/coin_puzzle.py) to solve it,
 
 For posterity, the commands/inputs required to complete this stage are included
-for reference and can be found [here](./dungeon.txt).
+for reference and can be found [here](./part1.txt).
 
 ## 7th Code
 Personally, this is by far the most difficult part of the challenge, and the way
 it is hinted at is quite clever as well, with the following snippet lying in a
 `strange book` found in the previous section.
 
-```
-...
-The second destination, however, is predicted to require a very specific
-energy level in the eighth register.  The teleporter must take great care to
-confirm that this energy level is exactly correct before teleporting its user!
-
-... you will need to extract the confirmation algorithm, reimplement it on more
-powerful hardware, and optimize it....
-
-Then, set the eighth register to this value, activate the teleporter, and
-bypass the confirmation mechanism. ...
-```
+> ...
+> The second destination, however, is predicted to require a very specific
+> energy level in the eighth register.  The teleporter must take great care to
+> confirm that this energy level is exactly correct before teleporting its user!
+> 
+> ... you will need to extract the confirmation algorithm, reimplement it on more
+> powerful hardware, and optimize it....
+> 
+> Then, set the eighth register to this value, activate the teleporter, and
+> bypass the confirmation mechanism. ...
+>
 
 From the hint provided, it looks as though we need to modify the value
 within the 8th register in some manner, then using the teleporter will allow us
@@ -87,7 +87,7 @@ to some degree in all the solutions I looked at. The 8th register(r7 in examples
 it turns out was only referenced 4 times in the whole file, and the following
 snippet was what affected the teleporter:
 
-```asm
+```assembly
 6027:  JT   r0    6035              # if r0 != 0 jump to 6035, else 
 6030:  ADD  r0    r1    1           # r0 = r1 + 1
 6034:  RET                          
@@ -107,7 +107,7 @@ snippet was what affected the teleporter:
 ```
 
 The instruction calling this function is shown below:
-```asm
+```assembly
 5483:  SET  r0    4                 # r0 = 4
 5486:  SET  r1    1                 # r1 = 1
 5489:  CALL 6027                    # call function beginning at 6027
@@ -144,7 +144,7 @@ def func():
 
 Observe that the shortest path to return from this function is within the first
 `if` branch, where `r0` is `0` initially and will be set to `r1 + 1` before
-returning. Thus, if we manually set `r0` to `0` and `r1` as `5`, `r0` will be
+returning. Thus, if we manually set `r0` to `0` and `r1` to `5`, `r0` will be
 `6` after calling the function, which allows us to continue to the next section.
 
 I added a command to change these values before using the teleporter called
@@ -164,4 +164,18 @@ use teleporter
 
 ## 8th Code
 
-TODO
+After the teleporter shenanigans of the previous section, we are almost at the
+end of the challenge. After a little more navigating, it becomes apparent that
+the final code is locked behind yet another puzzle.
+
+To put it simply, given a number, the aim is to find the shortest path through
+a 'maze' of elements to create an expression that will equal that number. This
+puzzle was relatively tame compared to the last one, obviously, and I wrote a
+script to solve it using *breadth-first-search*, which can be found
+[here](./scripts/vault_puzzle.py). There are probably some optimizations to be
+made, but it does get the job done which is sufficient for our purposes.
+
+Similar to before, the list of commands necessary to navigate the rest of the
+challenge is included [here](./part2.txt), which starts off after collecting
+the **7th code**. There is one final twist, as the 8th code is read off a
+mirror, so it needs to be corrected appropriately, which is simple enough.

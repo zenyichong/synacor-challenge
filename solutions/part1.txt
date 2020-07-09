@@ -49,3 +49,7 @@ use corroded coin
 north
 take teleporter
 use teleporter (6th code can be obtained here)
+# take strange book
+# take business card
+# look strange book (important for the next section)
+# look business card
